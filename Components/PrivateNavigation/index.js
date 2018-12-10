@@ -9,7 +9,7 @@ import { Text, Button, Icon } from "native-base";
 
 //Store
 import AuthStore from "../../store/AuthStore";
-
+import CartStore from "../../store/CartStore";
 class PrivateNavigation extends React.Component {
   navigate() {
     let route = this.props.route;
@@ -23,6 +23,7 @@ class PrivateNavigation extends React.Component {
     return (
       <Button light transparent onPress={() => this.navigate()}>
         <Text>
+          {CartStore.quantity + " "}
           <Icon
             type="FontAwesome"
             name="coffee"
