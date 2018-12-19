@@ -10,10 +10,10 @@ import CartStore from "../../store/CartStore";
 
 class CoffeeCart extends Component {
   render() {
-    const list = CartStore.list;
+    const items = CartStore.items;
     let content;
-    if (list) {
-      content = list.map((item, index) => <CartItem item={item} key={index} />);
+    if (items) {
+      content = items.map(item => <CartItem item={item} key={item.id} />);
     }
 
     return (

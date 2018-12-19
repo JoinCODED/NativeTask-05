@@ -16,7 +16,7 @@ import {
   Header
 } from "native-base";
 //Store
-import AuthStore from "../../store/AuthStore";
+import AuthStore from "../../store/authStore";
 
 class Login extends Component {
   constructor(props) {

@@ -1,5 +1,6 @@
 import { decorate, observable } from "mobx";
 import axios from "axios";
+
 class CoffeeStore {
   constructor() {
     this.coffeeshops = null;

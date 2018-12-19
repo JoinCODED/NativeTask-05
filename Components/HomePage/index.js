@@ -14,22 +14,9 @@ import deviceStorage from "../../utilities/deviceStorage";
 import jwt_decode from "jwt-decode";
 
 //Store
-import AuthStore from "../../store/AuthStore";
+import AuthStore from "../../store/authStore";
 
 class HomePage extends Component {
-  componentDidMount() {
-    deviceStorage
-      .getToken()
-      .then(value => this.handleToken(value))
-      .catch(err => null);
-  }
-
-  handleToken(token) {
-    if (token) {
-      const decoded = jwt_decode(token);
-      AuthStore.setCurrentUser(decoded);
-    }
-  }
   render() {
     return (
       <Container style={styles.transparent}>

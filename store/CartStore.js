@@ -2,36 +2,36 @@ import { decorate, observable, action, computed } from "mobx";
 
 class CartStore {
   constructor() {
-    this.list = [];
+    this.items = [];
   }
 
   addItemToCart(item) {
-    const index = this.list.findIndex(
+    const index = this.items.findIndex(
       cartItem => cartItem.drink == item.drink && cartItem.option == item.option
     );
     if (index >= 0) {
-      this.list[index].quantity++;
+      this.items[index].quantity++;
     } else {
-      this.list.push(item);
+      this.items.push(item);
     }
   }
 
   removeItemFromCart(item) {
-    this.list = this.list.filter(cartItem => cartItem !== item);
+    this.items = this.items.filter(cartItem => cartItem !== item);
   }
 
   checkoutCart() {
-    this.list = [];
+    this.items = [];
   }
   get quantity() {
     let quantity = 0;
-    this.list.forEach(item => (quantity = quantity + item.quantity));
+    this.items.forEach(item => (quantity = quantity + item.quantity));
     return quantity;
   }
 }
 
 decorate(CartStore, {
-  list: observable,
+  items: observable,
   addItemToCart: action,
   removeItemFromCart: action,
   checkoutCart: action,

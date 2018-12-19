@@ -26,8 +26,8 @@ class CoffeeList extends Component {
     const coffeeshops = CoffeeStore.coffeeshops;
     let ListItems;
     if (coffeeshops) {
-      ListItems = coffeeshops.map(coffeeShop => (
-        <CoffeeItem coffeeShop={coffeeShop} key={coffeeShop.id} />
+      ListItems = coffeeshops.map(coffeeshop => (
+        <CoffeeItem coffeeshop={coffeeshop} key={coffeeshop.id} />
       ));
     }
     return (

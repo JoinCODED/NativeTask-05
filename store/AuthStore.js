@@ -1,13 +1,56 @@
 import { decorate, observable, action } from "mobx";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import deviceStorage from "../utilities/deviceStorage";
+import { AsyncStorage } from "react-native";
 
 class AuthStore {
   constructor() {
     this.user = null;
     this.error = null;
     this.isAuthenticated = false;
+
+    this.checkForToken();
+  }
+
+  setAuthToken(token) {
+    if (token) {
+      return AsyncStorage.setItem("token", token)
+        .then(
+          () => (axios.defaults.headers.common.Authorization = `JWT ${token}`)
+        )
+        .then(() => this.setCurrentUser(token));
+    } else {
+      return AsyncStorage.removeItem("token")
+        .then(() => delete axios.defaults.headers.common.Authorization)
+        .then(() => this.setCurrentUser());
+    }
+  }
+
+  setCurrentUser(token) {
+    if (token) {
+      // Decode token to get user data
+      const user = jwt_decode(token);
+      this.isAuthenticated = true;
+      this.user = user;
+    } else {
+      this.user = null;
+      this.error = null;
+      this.isAuthenticated = false;
+    }
+  }
+
+  checkForToken() {
+    return AsyncStorage.getItem("token").then(token => {
+      if (token) {
+        const currentTime = Date.now() / 1000;
+        const user = jwt_decode(token);
+        if (user.exp > currentTime) {
+          this.setAuthToken(token);
+        } else {
+          this.logout();
+        }
+      }
+    });
   }
 
   loginUser(userData, navigation) {
@@ -17,13 +60,11 @@ class AuthStore {
       .then(res => res.data)
       .then(user => {
         const { token } = user;
-        // Decode token to get user data
-        const decoded = jwt_decode(token);
         // Set current user
-        this.setCurrentUser(decoded);
-        deviceStorage.saveToken(token);
-        // Navigate to Main page
-        navigation.navigate("CoffeeList");
+        this.setAuthToken(token).then(() =>
+          // Navigate to coffe list after successful login
+          navigation.navigate("CoffeeList")
+        );
       })
       .catch(err => {
         console.log(err);
@@ -40,19 +81,13 @@ class AuthStore {
         console.log(err);
       });
   }
-  setCurrentUser(decode) {
-    this.isAuthenticated = true;
-    this.user = decode;
-  }
-  setError(error) {
-    this.error = error;
-  }
+
   logoutUser(navigation) {
-    this.user = null;
-    this.error = null;
-    this.isAuthenticated = false;
-    deviceStorage.deleteJWT();
-    navigation.navigate("CoffeeList");
+    this.setAuthToken()
+      .then(() => navigation.navigate("CoffeeList"))
+      .catch(err => {
+        console.log(err);
+      });
     alert("Logged out successfully");
   }
 }
@@ -64,8 +99,9 @@ decorate(AuthStore, {
   loginUser: action,
   registerUser: action,
   setCurrentUser: action,
-  setError: action,
   logoutUser: action
 });
 
-export default new AuthStore();
+let authStore = new AuthStore();
+
+export default authStore;

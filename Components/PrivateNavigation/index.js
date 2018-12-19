@@ -8,8 +8,9 @@ import { withNavigation } from "react-navigation";
 import { Text, Button, Icon } from "native-base";
 
 //Store
-import AuthStore from "../../store/AuthStore";
-import CartStore from "../../store/CartStore";
+import AuthStore from "../../store/authStore";
+import CartStore from "../../store/cartStore";
+
 class PrivateNavigation extends React.Component {
   navigate() {
     let route = this.props.route;

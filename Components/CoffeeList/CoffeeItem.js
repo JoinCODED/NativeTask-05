@@ -13,20 +13,21 @@ import { withNavigation } from "react-navigation";
 class CoffeeItem extends Component {
   handlePress() {
     this.props.navigation.navigate("CoffeeDetail", {
-      shop: this.props.coffeeShop
+      shop: this.props.coffeeshop
     });
   }
 
   render() {
+    const { coffeeshop } = this.props;
     return (
       <ImageBackground
-        source={{ uri: this.props.coffeeShop.background }}
+        source={{ uri: coffeeshop.background }}
         style={styles.background}
       >
         <View style={styles.overlay} />
         <ListItem
           button
-          onPress={() => this.handlePress(this.props.coffeeShop)}
+          onPress={() => this.handlePress(coffeeshop)}
           style={styles.listitem}
         >
           <Card style={styles.transparent}>
@@ -34,12 +35,12 @@ class CoffeeItem extends Component {
               <Left>
                 <Thumbnail
                   bordered
-                  source={{ uri: this.props.coffeeShop.img }}
+                  source={{ uri: coffeeshop.img }}
                   style={styles.thumbnail}
                 />
-                <Text style={styles.text}>{this.props.coffeeShop.name}</Text>
+                <Text style={styles.text}>{coffeeshop.name}</Text>
                 <Text note style={styles.text}>
-                  {this.props.coffeeShop.distance}
+                  {coffeeshop.distance}
                 </Text>
               </Left>
             </CardItem>
